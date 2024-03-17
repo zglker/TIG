@@ -8,36 +8,23 @@ services:
       DATABASE_URL: 'mongodb://root:password@mongo:27017/tig?authSource=admin&replicaSet=rs0'
     depends_on:
       - mongo
+
   mongo:
     image: mongo:latest
-    command:
-      [
-        'mongod',
-        '--replSet',
-        'rs0',
-        '--bind_ip_all',
-        '--auth',
-        '--keyFile',
-        '/etc/mongo/mongodb-keyfile',
-      ]
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--auth", "--keyFile", "/etc/mongo/mongodb-keyfile"]
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
-      MONGO_INITDB_DATABASE: tig
-    ports:
-      - '27017:27017'
-    healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'host.docker.internal:27017'}]}) }" | mongosh --port 27017 --quiet
-      interval: 5s
-      timeout: 30s
-      start_period: 0s
-      retries: 30
     volumes:
       - ./mongodb-keyfile:/etc/mongo/mongodb-keyfile:ro
       - mongo-data:/data/db
+    ports:
+      - '27017:27017'
+
   redis:
     image: redis:latest
     ports:
       - '6379:6379'
+
 volumes:
   mongo-data:
