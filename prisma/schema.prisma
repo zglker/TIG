@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
 }
 
 datasource db {
@@ -15,8 +16,10 @@ datasource db {
 
 
 model ShortUrl {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  originalUrl String
-  shortCode String   @unique
-  createdAt DateTime @default(now())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  originalUrl String @unique
+  shortUrl    String @unique
+  createdAt   DateTime @default(now())
+
+  @@unique([originalUrl, shortUrl])
 }
