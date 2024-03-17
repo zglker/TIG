@@ -6,7 +6,7 @@ import Redis from 'ioredis';
 @Injectable()
 export class UrlShortenerService {
   redisClient: any;
-  constructor(private prisma: PrismaService) {
+  constructor(protected prisma: PrismaService) {
     this.redisClient = new Redis({
       host: 'redis', // Use environment variables or configuration files for host and port
       port: 6379,
